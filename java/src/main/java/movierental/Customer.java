@@ -1,5 +1,7 @@
 package movierental;
+import service.CalculBonus;
 import service.CalculPrice;
+import service.RentalDetailManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,31 +24,32 @@ public class Customer {
     }
 
     public String statement() {
-        double totalAmount = 0;
+        RentalDetailManager rentalDetailManager=new RentalDetailManager();
+        double totalCost = 0;
         int fidelityPoint = 0;
-        String result = "Rental Record for " + getName() + "\n";
+        String rentalDetail = "Rental Record for " + getName() + "\n";
         CalculPrice calculPrice=new CalculPrice();
-        for (Rental movie: _rentals) {
-            double thisAmount = 0;
+        for (Rental rental: _rentals) {
+            double cost = 0;
 
-            thisAmount=calculPrice.findPrice(movie);
+            cost=calculPrice.findPrice(rental);
             //determine amounts for each line
 
             // add frequent renter points
 
 
             // add bonus for a two day new release rental
-            fidelityPoint=calculPrice.calculBonus(movie,fidelityPoint);
+            fidelityPoint=new CalculBonus().calculBonus(rental,fidelityPoint);
 
-            // show figures for this rental
-            result += "\t" + movie.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
-            totalAmount += thisAmount;
+            // show figures
+            rentalDetail += rentalDetailManager.detailRental(rental.getMovie().getTitle(),cost);
+            totalCost=calculPrice.sum(totalCost, cost);
         }
 
-        // add footer lines
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(fidelityPoint) + " frequent renter points";
+        // add footer lines"Amount owed is " + String.valueOf(totalAmount) + "\n";
+        rentalDetail += rentalDetailManager.footerDetail(totalCost);
+        rentalDetail += rentalDetailManager.footerDetail(fidelityPoint);
 
-        return result;
+        return rentalDetail;
     }
 }
