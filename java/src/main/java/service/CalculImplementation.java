@@ -1,10 +1,11 @@
 package service;
 
+import interfaces.CalculInterface;
 import movierental.Movie;
 import movierental.Rental;
 
-public class Calcul {
-    public Calcul() {
+public class CalculImplementation implements CalculInterface {
+    public CalculImplementation() {
     }
 
     public double findPrice(Rental each) {

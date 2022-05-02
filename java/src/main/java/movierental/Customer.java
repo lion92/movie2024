@@ -1,6 +1,7 @@
 package movierental;
-import service.Calcul;
-import service.RentalDetailManager;
+import interfaces.DetailInterface;
+import service.CalculImplementation;
+import service.DetailImplementation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public class Customer {
 
     private String _name;
-    private List<Rental> _rentals = new ArrayList<>();
+    private final List<Rental> _rentals = new ArrayList<>();
 
     public Customer(String name) {
         _name = name;
@@ -23,32 +24,21 @@ public class Customer {
     }
 
     public String statement() {
-        RentalDetailManager rentalDetailManager=new RentalDetailManager();
+        DetailInterface rentalDetailManager=new DetailImplementation();
         double totalCost = 0;
         int fidelityPoint = 0;
-        String rentalDetail = "Rental Record for " + getName() + "\n";
-        Calcul calcul=new Calcul();
+        StringBuilder rentalDetail=rentalDetailManager.headerDetail(getName());
+        CalculImplementation calculate=new CalculImplementation();
         for (Rental rental: _rentals) {
-            double cost = 0;
-
-            cost=calcul.findPrice(rental);
-            //determine amounts for each line
-
-            // add frequent renter points
-
-
-            // add bonus for a two day new release rental
-            fidelityPoint=calcul.calculBonus(rental,fidelityPoint);
-
-            // show figures
-            rentalDetail += rentalDetailManager.detailRental(rental.getMovie().getTitle(),cost);
-            totalCost=calcul.sum(totalCost, cost);
+            double cost;
+            cost=calculate.findPrice(rental);
+            fidelityPoint=calculate.calculBonus(rental,fidelityPoint);
+            rentalDetail.append(rentalDetailManager.detailRental(rental.getMovie().getTitle(), cost));
+            totalCost=calculate.sum(totalCost, cost);
         }
+        rentalDetail.append(rentalDetailManager.footerCostDetail(totalCost));
+        rentalDetail.append(rentalDetailManager.footerFidelityDetail(fidelityPoint));
 
-        // add footer lines"Amount owed is " + String.valueOf(totalAmount) + "\n";
-        rentalDetail += rentalDetailManager.footerDetail(totalCost);
-        rentalDetail += rentalDetailManager.footerDetail(fidelityPoint);
-
-        return rentalDetail;
+        return rentalDetail.toString();
     }
 }
