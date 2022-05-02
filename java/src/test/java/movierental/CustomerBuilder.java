@@ -9,7 +9,7 @@ public class CustomerBuilder {
     public static final String NAME = "Roberts";
 
     private String name = NAME;
-    private final List<Rental> rentals = new ArrayList<>();
+    private final List<Rental> rentals = new ArrayList<Rental>();
 
     public Customer build() {
         Customer result = new Customer(name);
