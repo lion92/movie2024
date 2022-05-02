@@ -3,8 +3,8 @@ package service;
 import movierental.Movie;
 import movierental.Rental;
 
-public class CalculPrice {
-    public CalculPrice() {
+public class Calcul {
+    public Calcul() {
     }
 
     public double findPrice(Rental each) {
@@ -28,6 +28,14 @@ public class CalculPrice {
     }
     public double sum(double costPrecedent, double cost){
         return costPrecedent+cost;
+    }
+
+    public int calculBonus(Rental each, int thisBonus) {
+        thisBonus = thisBonus + 1;
+        if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) && each.getDaysRented() > 1)
+            thisBonus++;
+
+        return thisBonus;
     }
 
 }

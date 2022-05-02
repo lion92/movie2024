@@ -1,6 +1,5 @@
 package movierental;
-import service.CalculBonus;
-import service.CalculPrice;
+import service.Calcul;
 import service.RentalDetailManager;
 
 import java.util.ArrayList;
@@ -28,22 +27,22 @@ public class Customer {
         double totalCost = 0;
         int fidelityPoint = 0;
         String rentalDetail = "Rental Record for " + getName() + "\n";
-        CalculPrice calculPrice=new CalculPrice();
+        Calcul calcul=new Calcul();
         for (Rental rental: _rentals) {
             double cost = 0;
 
-            cost=calculPrice.findPrice(rental);
+            cost=calcul.findPrice(rental);
             //determine amounts for each line
 
             // add frequent renter points
 
 
             // add bonus for a two day new release rental
-            fidelityPoint=new CalculBonus().calculBonus(rental,fidelityPoint);
+            fidelityPoint=calcul.calculBonus(rental,fidelityPoint);
 
             // show figures
             rentalDetail += rentalDetailManager.detailRental(rental.getMovie().getTitle(),cost);
-            totalCost=calculPrice.sum(totalCost, cost);
+            totalCost=calcul.sum(totalCost, cost);
         }
 
         // add footer lines"Amount owed is " + String.valueOf(totalAmount) + "\n";
