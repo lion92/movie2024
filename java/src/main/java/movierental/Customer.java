@@ -30,11 +30,11 @@ public class Customer {
         StringBuilder rentalDetail=rentalDetailManager.headerDetail(getName());
         CalculImplementation calculate=new CalculImplementation();
         for (Rental rental: _rentals) {
-            double cost;
-            cost=calculate.findPrice(rental);
+            double moviePrice;
+            moviePrice =calculate.findPrice(rental);
             fidelityPoint=calculate.calculBonus(rental,fidelityPoint);
-            rentalDetail.append(rentalDetailManager.detailRental(rental.getMovie().getTitle(), cost));
-            totalCost=calculate.sum(totalCost, cost);
+            rentalDetail.append(rentalDetailManager.detailRental(rental.getMovie().getTitle(), moviePrice));
+            totalCost=calculate.sum(totalCost, moviePrice);
         }
         rentalDetail.append(rentalDetailManager.footerCostDetail(totalCost));
         rentalDetail.append(rentalDetailManager.footerFidelityDetail(fidelityPoint));
